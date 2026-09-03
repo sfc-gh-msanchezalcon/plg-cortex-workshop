@@ -264,7 +264,7 @@ SELECT
   SUM(SNOWFLAKE.CORTEX.COUNT_TOKENS('llama3.1-8b', clarity_comment)) AS total_tokens
 FROM SURVEY_CLEAN;
 
--- 2.4  THE PIVOT: enrich each row ONCE, incrementally, as a Dynamic Table.
+-- 2.4  KEY STEP: enrich each row ONCE, incrementally, as a Dynamic Table.
 --      AI functions live in the SELECT, so an incremental refresh only reruns
 --      them on NEW rows. The semantic view / agent then read plain columns.
 CREATE OR REPLACE DYNAMIC TABLE SURVEY_ENRICHED
@@ -295,7 +295,7 @@ FROM SURVEY_ENRICHED
 LIMIT 10;
 
 -- 2.6  Query-time synthesis done RIGHT: AI_AGG / AI_SUMMARIZE_AGG do the
---      map-reduce for you (no context-window limit, no batches of 50).
+--      map-reduce for you (no context-window limit, no manual batching).
 --      game_round_performance is a plain column on the enriched table now.
 SELECT
   game_round_performance,

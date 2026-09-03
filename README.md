@@ -2,7 +2,7 @@
 
 A self-guided, ~60-minute hands-on lab for the Postcode Lottery Group data team, built on **your own** clarity/tone survey use case.
 
-> **This builds on your deck (André, 28-07-2026), it does not replace it.** Same use case, same four stages — Foundation → Core AI → Advanced AI → Consumption. The one thing we change is the architecture underneath, and doing so answers the honest question on your slide 11 ("NLP needs extra code to be fast — are we teaching the right thing?").
+> **This builds on the prototype André's team already created — it doesn't replace it.** Same use case, same four stages — Foundation → Core AI → Advanced AI → Consumption. The one change is the architecture underneath, and it directly answers the question the team raised: *does natural-language analysis really need this much extra code to run fast and cheap?*
 
 ---
 
@@ -45,12 +45,12 @@ See **[SETUP_SNOWFLAKE.md](SETUP_SNOWFLAKE.md)** for the two ways to open this i
 |---|---|
 | `SETUP_SNOWFLAKE.md` | How to open this repo in Snowflake (both paths) |
 | `AGENDA.md` | The self-paced run-of-show + a pre-flight checklist |
-| `PROPOSAL.md` | The format proposal for your team to review before we lock it |
+| `PROPOSAL.md` | The workshop format proposal for your team to review |
 | `setup/00_setup.ipynb` | Self-serve sandbox + synthetic data generator |
 | `notebooks/01–04` | The four hands-on stages |
 | `reference/scaffold.sql` | Answer key — every DDL/query in one file |
 | `reference/architecture.md` | The four-layer picture + cached-vs-live branches |
-| `reference/their_approach_vs_ours.md` | Side-by-side: the current batching design → precompute |
+| `reference/design-approach.md` | Why we precompute: current design → recommended, side by side |
 | `reference/cost_guardrails.md` | Token capping, per-user credit limits, concurrency |
 
 ---
