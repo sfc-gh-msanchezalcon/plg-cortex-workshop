@@ -2,9 +2,23 @@
 
 This is a **self-guided** lab. The times are a target so you can gauge your pace; work independently and take the time you need. Miriam is monitoring and available if you get stuck, but nothing here needs a presenter.
 
+## Step 0 — Get the lab into Snowflake (before the clock)
+
+Do this once, before the timed run. Full detail + screenshots-worth of steps are
+in **[SETUP_SNOWFLAKE.md](SETUP_SNOWFLAKE.md)**; the short version:
+
+**Recommended — connect the GitHub repo as a Workspace:**
+1. Your admin runs the one-time API integration (SETUP_SNOWFLAKE.md → A1). Ask them for the integration name (`git_api_github`).
+2. Snowsight → **Projects » Workspaces** → **＋ » From Git repository**.
+3. Repository URL `<REPO_URL>`, API integration `git_api_github`, credentials **empty** (public repo) → **Create**.
+4. Open `setup/00_setup.ipynb`.
+
+**Or, zero-setup fallback:** download the `.ipynb` files from `<REPO_URL>` and
+import each via **Projects » Notebooks » ＋ » Import .ipynb file**.
+
 ## Pre-flight checklist (2 min, before the clock)
 
-- [ ] You can open the repo in Snowflake (see [SETUP_SNOWFLAKE.md](SETUP_SNOWFLAKE.md)).
+- [ ] You've connected the repo (Step 0 above) and can see `setup/00_setup.ipynb`.
 - [ ] Your role can `CREATE SCHEMA` + `CREATE WAREHOUSE` (or you have a sandbox pre-made).
 - [ ] You have run **nothing** yet — start at `00_setup`.
 

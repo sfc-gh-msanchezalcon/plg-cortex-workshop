@@ -11,34 +11,60 @@ The repo is **public**, so no personal access token or secret is required either
 
 ## Option A — Git-backed Workspace (recommended)
 
+The repo is `<REPO_URL>`. There are two roles below: an **admin does step A1 once
+for the whole account**, then **every participant does step A2** to get their own
+copy of the lab.
+
 ### A1. One-time admin step (once per account)
 
-An account admin (or a role with `CREATE INTEGRATION`) runs this once so Snowflake can reach GitHub:
+Snowsight needs an **API integration** before it can reach GitHub. An account
+admin (`ACCOUNTADMIN`, or any role with `CREATE INTEGRATION`) runs this once. Open
+a **Worksheet** and run:
 
 ```sql
--- One-time: allow Snowsight Workspaces to connect to public github.com repos
+USE ROLE ACCOUNTADMIN;
+
+-- Allow Snowsight Workspaces / Git repositories to reach public github.com
 CREATE OR REPLACE API INTEGRATION git_api_github
   API_PROVIDER = git_https_api
   API_ALLOWED_PREFIXES = ('https://github.com/')
   ENABLED = TRUE;
 
--- Let the workshop roles use it (adjust role name as needed)
+-- Let the workshop participants use it. Replace PUBLIC with the role your
+-- participants log in as if you want to scope it more tightly.
 GRANT USAGE ON INTEGRATION git_api_github TO ROLE PUBLIC;
+
+-- Verify it exists
+SHOW API INTEGRATIONS LIKE 'git_api_github';
 ```
 
-> Because the repo is public, no `git_credentials`/secret is needed. For a private repo you would add a `SECRET` holding a GitHub PAT and reference it in the integration — not required here.
+> The repo is **public**, so no token or `git_credentials` secret is needed. (For
+> a private repo you'd create a `SECRET` holding a GitHub PAT and add
+> `GIT_CREDENTIALS = <secret>` to the integration — not required here.)
 
-### A2. Each participant connects the repo
+Tell participants the integration name (`git_api_github`) and the repo URL.
+
+### A2. Each participant connects the repo (2 minutes)
 
 In Snowsight:
 
-1. **Projects » Workspaces**
-2. **Create » Workspace from Git repository**
-3. Repository URL: `<REPO_URL>`  *(paste the link Miriam shared)*
-4. API integration: `git_api_github`
-5. Public repo → leave credentials empty → **Create**
+1. Left nav → **Projects » Workspaces**.
+2. Top-left **My Workspace** dropdown → **＋ (Add / Create)** → **From Git repository**.
+3. Fill the dialog:
+   - **Repository URL:** `<REPO_URL>`
+   - **API integration:** `git_api_github`  *(from step A1)*
+   - **Personal access token / credentials:** leave **empty** (public repo)
+   - **Workspace name:** e.g. `plg-cortex-workshop`
+4. Click **Create**. Snowsight clones the repo into your workspace on the `main` branch.
+5. In the file tree, open **`setup/00_setup.ipynb`** and run it, then `01` → `04`
+   in `notebooks/`.
 
-You now have the full repo as a workspace. Open `setup/00_setup.ipynb` and start. Pull later updates with the workspace's **Fetch/Pull** control.
+**Getting updates later:** if Miriam pushes changes, use the branch/Git control at
+the top of the workspace and choose **Pull** (or **Fetch**) to sync.
+
+**Committing your own edits (optional):** your workspace is your own branch/clone —
+editing notebooks won't affect anyone else. You don't need to push anything for
+the lab.
 
 ---
 
