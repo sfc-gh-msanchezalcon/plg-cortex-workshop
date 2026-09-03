@@ -1,0 +1,17 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Notebook checkpoints / local runtime
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Local secrets — never commit
+*.env
+.env
+secrets.toml
+connections.toml
