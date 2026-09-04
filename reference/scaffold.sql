@@ -54,14 +54,13 @@ WITH base AS (
     UNIFORM(0, 3, RANDOM())             AS junk_idx,
     UNIFORM(0, 4, RANDOM())             AS tneg_idx,
     UNIFORM(0, 4, RANDOM())             AS tpos_idx,
-    UNIFORM(1, 100, RANDOM())           AS junk_roll,
-    UNIFORM(1, 100000, RANDOM())        AS round_seed
+    UNIFORM(1, 100, RANDOM())           AS junk_roll
   FROM TABLE(GENERATOR(ROWCOUNT => 4000))
 )
 SELECT
   'R'  || LPAD(n::string, 7, '0')                                       AS response_id,
   'P'  || LPAD(player_seed::string, 5, '0')                             AS player_id,
-  'GR' || LPAD(round_seed::string, 7, '0')                              AS game_round_id,
+  'GR' || LPAD(n::string, 7, '0')                                       AS game_round_id,  -- unique per response (no fan-out)
   CASE WHEN brand_pick = 0 THEN 'NPL' ELSE 'VriendenLoterij' END        AS brand,
   GET(ARRAY_CONSTRUCT('welcome','prize_notification','monthly_update','winback'), email_pick)::string AS email_type,
   DATEADD('day', -day_offset, CURRENT_DATE())                           AS survey_date,
@@ -141,7 +140,7 @@ CREATE OR REPLACE TABLE PLAYER_BEHAVIOUR AS
 DROP TABLE IF EXISTS _SURVEY_RAW;
 
 -- 0.5  Self-check: expected shape
-SELECT 'SURVEY_RESPONSES' AS tbl, COUNT(*) AS rows FROM SURVEY_RESPONSES
+SELECT 'SURVEY_RESPONSES' AS tbl, COUNT(*) AS row_count FROM SURVEY_RESPONSES
 UNION ALL SELECT 'GAME_ROUNDS', COUNT(*) FROM GAME_ROUNDS
 UNION ALL SELECT 'PLAYER_BEHAVIOUR', COUNT(*) FROM PLAYER_BEHAVIOUR;
 -- Expect ~4000 survey rows, ~4000 game rounds, <=1500 players.
@@ -250,8 +249,9 @@ SELECT
   SUM(SNOWFLAKE.CORTEX.COUNT_TOKENS('llama3.1-8b', clarity_comment)) AS total_tokens
 FROM SURVEY_RESPONSES;
 
--- 2.2  AI_FILTER drops junk in plain language (replaces the "nee/nvt/-" tricks).
---      We filter over SURVEY_BASE so game_round_performance travels with the row.
+-- 2.2  AI_FILTER as an AD-HOC junk filter, to demonstrate natural-language
+--      filtering and the token drop. NOTE: AI_FILTER here is in a WHERE clause,
+--      which is fine for an ad-hoc view but is NOT incremental-safe (see 2.4).
 CREATE OR REPLACE VIEW SURVEY_CLEAN AS
 SELECT *
 FROM SURVEY_BASE
@@ -265,11 +265,16 @@ SELECT
 FROM SURVEY_CLEAN;
 
 -- 2.4  KEY STEP: enrich each row ONCE, incrementally, as a Dynamic Table.
---      AI functions live in the SELECT, so an incremental refresh only reruns
---      them on NEW rows. The semantic view / agent then read plain columns.
+--      INCREMENTAL RULE: Cortex AI functions qualify for incremental refresh
+--      ONLY in the SELECT clause, never in WHERE. So we read from SURVEY_BASE
+--      (not SURVEY_CLEAN — its AI_FILTER-in-WHERE would force FULL refresh),
+--      use a cheap deterministic pre-filter, and make AI_FILTER an is_substantive
+--      COLUMN. REFRESH_MODE = INCREMENTAL makes creation fail if anything isn't
+--      incremental-safe. Confirm with: SHOW DYNAMIC TABLES LIKE 'SURVEY_ENRICHED';
 CREATE OR REPLACE DYNAMIC TABLE SURVEY_ENRICHED
   TARGET_LAG = '1 hour'
   WAREHOUSE  = PLG_WORKSHOP_WH
+  REFRESH_MODE = INCREMENTAL
 AS
 SELECT
   s.response_id,
@@ -282,12 +287,15 @@ SELECT
   s.tone_rating,
   s.clarity_comment,
   s.tone_comment,
+  AI_FILTER(PROMPT('Is this a substantive comment about an email, not an empty or throwaway answer: {0}', s.clarity_comment)) AS is_substantive,
   AI_SENTIMENT(s.clarity_comment):categories[0]:sentiment::string        AS clarity_sentiment,
   AI_SENTIMENT(s.tone_comment):categories[0]:sentiment::string           AS tone_sentiment,
   AI_CLASSIFY(s.clarity_comment,
     ['content_clarity','layout','too_long','tone','technical','pricing','other']
   ):labels[0]::string                                                    AS clarity_topic
-FROM SURVEY_CLEAN s;
+FROM SURVEY_BASE s
+WHERE s.clarity_comment IS NOT NULL
+  AND LENGTH(TRIM(s.clarity_comment)) > 4;
 
 -- 2.5  Verify enrichment on a sample
 SELECT clarity_comment, clarity_sentiment, clarity_topic

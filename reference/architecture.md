@@ -13,11 +13,12 @@ The workshop builds four layers. The key idea is the split between what is
                                          │
                          ┌───────────────▼──────────────────────────┐
                          │  Layer 2 — Core AI  (CACHED / precompute) │
-                         │  SURVEY_CLEAN (AI_FILTER drops junk)       │
-                         │  SURVEY_ENRICHED (Dynamic Table):          │
-                         │     AI_SENTIMENT  → clarity/tone sentiment │
-                         │     AI_CLASSIFY   → clarity_topic          │
-                         │  incremental: reruns only on new rows      │
+                         │  SURVEY_ENRICHED (Dynamic Table, from       │
+                         │   SURVEY_BASE, deterministic pre-filter):   │
+                         │     AI_FILTER   → is_substantive            │
+                         │     AI_SENTIMENT→ clarity/tone sentiment    │
+                         │     AI_CLASSIFY → clarity_topic             │
+                         │  incremental: reruns only on new rows       │
                          └───────────────┬──────────────────────────┘
                                          │
               ┌──────────────────────────┼───────────────────────────┐
@@ -45,6 +46,12 @@ stable per-row work to the cached layer and the live layer becomes cheap and sma
 ## Why a Dynamic Table for the enrichment
 - AI functions sit in the `SELECT`, so an **incremental** refresh only invokes the
   model on **new/changed rows** — not the whole history every time.
+- **Incremental rule:** Cortex AI functions are incremental-safe **only in the
+  SELECT clause**, never in `WHERE`. So the table reads from `SURVEY_BASE` with a
+  cheap *deterministic* pre-filter (`LENGTH(TRIM(...)) > 4`), and `AI_FILTER`
+  becomes an `is_substantive` **column** rather than a WHERE predicate. (Putting
+  `AI_FILTER` in a WHERE — e.g. via the ad-hoc `SURVEY_CLEAN` view — forces a FULL
+  refresh; set `REFRESH_MODE = INCREMENTAL` to catch this at create time.)
 - `TARGET_LAG` controls freshness; Snowflake schedules the refresh.
 - The semantic view and agent read **ordinary columns** — fast and consistent.
 
