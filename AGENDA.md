@@ -10,10 +10,10 @@ in **[SETUP_SNOWFLAKE.md](SETUP_SNOWFLAKE.md)**; the short version:
 **Recommended — connect the GitHub repo as a Workspace:**
 1. Your admin runs the one-time API integration (SETUP_SNOWFLAKE.md → A1). Ask them for the integration name (`git_api_github`).
 2. Snowsight → **Projects » Workspaces** → **＋ » From Git repository**.
-3. Repository URL `<REPO_URL>`, API integration `git_api_github`, credentials **empty** (public repo) → **Create**.
+3. Repository URL `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop.git`, API integration `git_api_github`, credentials **empty** (public repo) → **Create**.
 4. Open `setup/00_setup.ipynb`.
 
-**Or, zero-setup fallback:** download the `.ipynb` files from `<REPO_URL>` and
+**Or, zero-setup fallback:** download the `.ipynb` files from `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop` and
 import each via **Projects » Notebooks » ＋ » Import .ipynb file**.
 
 ## Pre-flight checklist (2 min, before the clock)

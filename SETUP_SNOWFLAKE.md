@@ -11,7 +11,7 @@ The repo is **public**, so no personal access token or secret is required either
 
 ## Option A — Git-backed Workspace (recommended)
 
-The repo is `<REPO_URL>`. There are two roles below: an **admin does step A1 once
+The repo is `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop`. There are two roles below: an **admin does step A1 once
 for the whole account**, then **every participant does step A2** to get their own
 copy of the lab.
 
@@ -51,7 +51,7 @@ In Snowsight:
 1. Left nav → **Projects » Workspaces**.
 2. Top-left **My Workspace** dropdown → **＋ (Add / Create)** → **From Git repository**.
 3. Fill the dialog:
-   - **Repository URL:** `<REPO_URL>`
+   - **Repository URL:** `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop.git`
    - **API integration:** `git_api_github`  *(from step A1)*
    - **Personal access token / credentials:** leave **empty** (public repo)
    - **Workspace name:** e.g. `plg-cortex-workshop`
@@ -72,7 +72,7 @@ the lab.
 
 No integration, no admin. Each participant:
 
-1. Download the five `.ipynb` files from `<REPO_URL>` (the `setup/` and `notebooks/` folders).
+1. Download the five `.ipynb` files from `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop` (the `setup/` and `notebooks/` folders).
 2. In Snowsight: **Projects » Notebooks » + Notebook » Import .ipynb file**.
 3. Import each notebook. Run `00_setup` first, then `01` → `04` in order.
 4. Keep `reference/scaffold.sql` open in a worksheet as your answer key.
