@@ -1,3 +1,5 @@
+![Postcode Loterij and Snowflake](assets/banner.png)
+
 # PLG Cortex Workshop - Player-Email Survey Analytics
 
 A self-guided, ~60-minute hands-on lab for the Postcode Lottery Group data team, built on **your own** clarity/tone survey use case.
