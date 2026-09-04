@@ -9,11 +9,11 @@ What does **not** cap tokens:
 - `STATEMENT_TIMEOUT_IN_SECONDS` and the Analyst query timeout cap **runtime**, not tokens.
 - The agent usage cap limits the agent, not the SQL it issues underneath.
 
-What does — as of **March 2026** there's an account-usage view,
+What does - as of **March 2026** there's an account-usage view,
 `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY`, tracking credits and
 tokens per **user, model, function, and query**. Build guardrails on top:
 
-**Per-user monthly credit limit** — a scheduled task checks month-to-date spend
+**Per-user monthly credit limit** - a scheduled task checks month-to-date spend
 and revokes a user's access to Cortex when they cross budget (restore next month):
 
 ```sql
@@ -28,16 +28,16 @@ ORDER BY mtd_credits DESC;
 -- from the user, and re-grants at month start.
 ```
 
-**Runaway-query auto-cancel** — catch a single expensive query and cancel it
+**Runaway-query auto-cancel** - catch a single expensive query and cancel it
 before it runs away (query monitoring / a watchdog task on long-running
 Cortex queries).
 
-**Account-level guardrails** — a **Budget** on the workshop database/warehouse and
+**Account-level guardrails** - a **Budget** on the workshop database/warehouse and
 a **spend alert** for the overall ceiling.
 
 ## 2. Warehouse + concurrency for the workshop
 
-- Everyone shares `PLG_WORKSHOP_WH` (MEDIUM, multi-cluster 1–3). With a handful of
+- Everyone shares `PLG_WORKSHOP_WH` (MEDIUM, multi-cluster 1-3). With a handful of
   participants running small AI functions this is plenty and avoids per-person
   warehouse sprawl.
 - If you scale the dataset up a lot or add many participants, either raise
@@ -50,7 +50,7 @@ a **spend alert** for the overall ceiling.
 
 - **RBAC:** grant `REFERENCES, SELECT` on the semantic view to the analyst role;
   they don't need SELECT on base tables.
-- **Lineage:** native — the enriched Dynamic Table and semantic view show up in
+- **Lineage:** native - the enriched Dynamic Table and semantic view show up in
   the catalog/lineage automatically.
 - **Freshness:** monitor Dynamic Table refresh history; set `TARGET_LAG` to match
   how fresh the survey answers need to be.

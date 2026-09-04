@@ -1,16 +1,16 @@
-# Agenda — self-paced, ~60 minutes
+# Agenda - self-paced, ~60 minutes
 
 This is a **self-guided** lab. The times are a target so you can gauge your pace; work independently and take the time you need. Miriam is monitoring and available if you get stuck, but nothing here needs a presenter.
 
-## Step 0 — Get the lab into Snowflake (before the clock)
+## Step 0 - Get the lab into Snowflake (before the clock)
 
 Do this once, before the timed run. Full detail + screenshots-worth of steps are
 in **[SETUP_SNOWFLAKE.md](SETUP_SNOWFLAKE.md)**; the short version:
 
-**Recommended — connect the GitHub repo as a Workspace:**
-1. Your admin runs the one-time API integration (SETUP_SNOWFLAKE.md → A1). Ask them for the integration name (`git_api_github`).
-2. Snowsight → **Projects » Workspaces** → **＋ » From Git repository**.
-3. Repository URL `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop.git`, API integration `git_api_github`, credentials **empty** (public repo) → **Create**.
+**Recommended - connect the GitHub repo as a Workspace:**
+1. Your admin runs the one-time API integration (SETUP_SNOWFLAKE.md -> A1). Ask them for the integration name (`git_api_github`).
+2. Snowsight -> **Projects » Workspaces** -> **＋ » From Git repository**.
+3. Repository URL `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop.git`, API integration `git_api_github`, credentials **empty** (public repo) -> **Create**.
 4. Open `setup/00_setup.ipynb`.
 
 **Or, zero-setup fallback:** download the `.ipynb` files from `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop` and
@@ -20,18 +20,18 @@ import each via **Projects » Notebooks » ＋ » Import .ipynb file**.
 
 - [ ] You've connected the repo (Step 0 above) and can see `setup/00_setup.ipynb`.
 - [ ] Your role can `CREATE SCHEMA` + `CREATE WAREHOUSE` (or you have a sandbox pre-made).
-- [ ] You have run **nothing** yet — start at `00_setup`.
+- [ ] You have run **nothing** yet - start at `00_setup`.
 
 ## Run-of-show
 
 | When | Notebook | Goal | Checkpoint (verify yourself) |
 |---|---|---|---|
-| 0:00–0:08 | `setup/00_setup.ipynb` | Your own sandbox + synthetic survey data | Row counts match the expected numbers shown in the notebook |
-| 0:08–0:20 | `01_foundation_semantic_view.ipynb` | A semantic view you can query in natural language | 2 NL questions return correct numbers |
-| 0:20–0:38 | `02_core_ai_precompute.ipynb` | Enrich free text **once** (sentiment + topic); summarise live | You can state why sentiment/topic are precomputed but the summary is not |
-| 0:38–0:50 | `03_advanced_ai_search.ipynb` *(stretch)* | "Find feedback like this" with Cortex Search | A similarity search returns relevant comments, filtered by game-round performance |
-| 0:50–0:58 | `04_consumption_eval.ipynb` | One agent over everything + an evaluation score | Agent answers the core question and you see an eval score |
-| 0:58–1:00 | (in `04`) wrap | Your go/no-go read | You've answered the 5 go/no-go questions for yourselves |
+| 0:00-0:08 | `setup/00_setup.ipynb` | Your own sandbox + synthetic survey data | Row counts match the expected numbers shown in the notebook |
+| 0:08-0:20 | `01_foundation_semantic_view.ipynb` | A semantic view you can query in natural language | 2 NL questions return correct numbers |
+| 0:20-0:38 | `02_core_ai_precompute.ipynb` | Enrich free text **once** (sentiment + topic); summarise live | You can state why sentiment/topic are precomputed but the summary is not |
+| 0:38-0:50 | `03_advanced_ai_search.ipynb` *(stretch)* | "Find feedback like this" with Cortex Search | A similarity search returns relevant comments, filtered by game-round performance |
+| 0:50-0:58 | `04_consumption_eval.ipynb` | One agent over everything + an evaluation score | Agent answers the core question and you see an eval score |
+| 0:58-1:00 | (in `04`) wrap | Your go/no-go read | You've answered the 5 go/no-go questions for yourselves |
 
 ## If you fall behind
 
@@ -41,10 +41,10 @@ Every stage notebook has a clearly-marked **FAST-PATH** cell near the top. Runni
 
 > *"Compare clarity feedback across good / normal / poor game rounds and explain the main driver of negative sentiment."*
 
-By the end, your Cortex Agent answers this in natural language — routing structured parts to Analyst and the "why" to a live summary — with an evaluation score attached.
+By the end, your Cortex Agent answers this in natural language - routing structured parts to Analyst and the "why" to a live summary - with an evaluation score attached.
 
 ## Stretch goals (if you finish early)
 
-- Scale `ROW_COUNT` up in `00_setup` and re-run enrichment — watch the incremental Dynamic Table only process new rows.
+- Scale `ROW_COUNT` up in `00_setup` and re-run enrichment - watch the incremental Dynamic Table only process new rows.
 - Add a second topic taxonomy value and re-classify.
 - Add a verified query for a question your team actually asks, and re-run the evaluation.

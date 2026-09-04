@@ -2,14 +2,14 @@
 
 There are two ways to get these notebooks into your Snowflake account. Pick whichever fits your governance.
 
-- **Option A — Git-backed Workspace** (recommended): one admin runs a ~2-minute setup once, then everyone connects the repo and can pull updates.
-- **Option B — Import notebooks** (zero setup): each person imports the `.ipynb` files directly. Nothing to configure.
+- **Option A - Git-backed Workspace** (recommended): one admin runs a ~2-minute setup once, then everyone connects the repo and can pull updates.
+- **Option B - Import notebooks** (zero setup): each person imports the `.ipynb` files directly. Nothing to configure.
 
 The repo is **public**, so no personal access token or secret is required either way.
 
 ---
 
-## Option A — Git-backed Workspace (recommended)
+## Option A - Git-backed Workspace (recommended)
 
 The repo is `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop`. There are two roles below: an **admin does step A1 once
 for the whole account**, then **every participant does step A2** to get their own
@@ -40,7 +40,7 @@ SHOW API INTEGRATIONS LIKE 'git_api_github';
 
 > The repo is **public**, so no token or `git_credentials` secret is needed. (For
 > a private repo you'd create a `SECRET` holding a GitHub PAT and add
-> `GIT_CREDENTIALS = <secret>` to the integration — not required here.)
+> `GIT_CREDENTIALS = <secret>` to the integration - not required here.)
 
 Tell participants the integration name (`git_api_github`) and the repo URL.
 
@@ -48,36 +48,36 @@ Tell participants the integration name (`git_api_github`) and the repo URL.
 
 In Snowsight:
 
-1. Left nav → **Projects » Workspaces**.
-2. Top-left **My Workspace** dropdown → **＋ (Add / Create)** → **From Git repository**.
+1. Left nav -> **Projects » Workspaces**.
+2. Top-left **My Workspace** dropdown -> **＋ (Add / Create)** -> **From Git repository**.
 3. Fill the dialog:
    - **Repository URL:** `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop.git`
    - **API integration:** `git_api_github`  *(from step A1)*
    - **Personal access token / credentials:** leave **empty** (public repo)
    - **Workspace name:** e.g. `plg-cortex-workshop`
 4. Click **Create**. Snowsight clones the repo into your workspace on the `main` branch.
-5. In the file tree, open **`setup/00_setup.ipynb`** and run it, then `01` → `04`
+5. In the file tree, open **`setup/00_setup.ipynb`** and run it, then `01` -> `04`
    in `notebooks/`.
 
 **Getting updates later:** if Miriam pushes changes, use the branch/Git control at
 the top of the workspace and choose **Pull** (or **Fetch**) to sync.
 
-**Committing your own edits (optional):** your workspace is your own branch/clone —
+**Committing your own edits (optional):** your workspace is your own branch/clone -
 editing notebooks won't affect anyone else. You don't need to push anything for
 the lab.
 
 ---
 
-## Option B — Import the notebooks (zero setup)
+## Option B - Import the notebooks (zero setup)
 
 No integration, no admin. Each participant:
 
 1. Download the five `.ipynb` files from `https://github.com/sfc-gh-msanchezalcon/plg-cortex-workshop` (the `setup/` and `notebooks/` folders).
 2. In Snowsight: **Projects » Notebooks » + Notebook » Import .ipynb file**.
-3. Import each notebook. Run `00_setup` first, then `01` → `04` in order.
+3. Import each notebook. Run `00_setup` first, then `01` -> `04` in order.
 4. Keep `reference/scaffold.sql` open in a worksheet as your answer key.
 
-Trade-off: no one-click "pull updates" — but nothing to configure and no admin involvement.
+Trade-off: no one-click "pull updates" - but nothing to configure and no admin involvement.
 
 ---
 

@@ -1,5 +1,5 @@
 -- ============================================================================
--- PLG Cortex Workshop — MASTER ANSWER KEY (scaffold.sql)
+-- PLG Cortex Workshop - MASTER ANSWER KEY (scaffold.sql)
 -- ----------------------------------------------------------------------------
 -- Every DDL/query the workshop builds, in one place. Use it if you get stuck,
 -- or to run any stage's "fast-path" from a worksheet. The notebooks contain the
@@ -14,7 +14,7 @@
 
 
 -- ============================================================================
--- STAGE 0 — SETUP + SYNTHETIC DATA  (setup/00_setup.ipynb)
+-- STAGE 0 - SETUP + SYNTHETIC DATA  (setup/00_setup.ipynb)
 -- ============================================================================
 
 -- 0.1  Shared database + warehouse (safe to run repeatedly; first person wins)
@@ -147,7 +147,7 @@ UNION ALL SELECT 'PLAYER_BEHAVIOUR', COUNT(*) FROM PLAYER_BEHAVIOUR;
 
 
 -- ============================================================================
--- STAGE 1 — FOUNDATION: base view + semantic view  (01_foundation...)
+-- STAGE 1 - FOUNDATION: base view + semantic view  (01_foundation...)
 -- ============================================================================
 
 -- 1.1  A clean base view. Grain = ONE row per survey response (no fan-out,
@@ -240,7 +240,7 @@ ORDER BY game_round_performance;
 
 
 -- ============================================================================
--- STAGE 2 — CORE AI: precompute enrichment + live summaries  (02_core_ai...)
+-- STAGE 2 - CORE AI: precompute enrichment + live summaries  (02_core_ai...)
 -- ============================================================================
 
 -- 2.1  See the token cost BEFORE reduction (all comments, incl. junk)
@@ -258,7 +258,7 @@ FROM SURVEY_BASE
 WHERE clarity_comment IS NOT NULL
   AND AI_FILTER(PROMPT('Is this a substantive comment about an email, not an empty or throwaway answer: {0}', clarity_comment));
 
--- 2.3  Token cost AFTER reduction — compare with 2.1
+-- 2.3  Token cost AFTER reduction - compare with 2.1
 SELECT
   COUNT(*)                                                        AS n_rows,
   SUM(SNOWFLAKE.CORTEX.COUNT_TOKENS('llama3.1-8b', clarity_comment)) AS total_tokens
@@ -267,7 +267,7 @@ FROM SURVEY_CLEAN;
 -- 2.4  KEY STEP: enrich each row ONCE, incrementally, as a Dynamic Table.
 --      INCREMENTAL RULE: Cortex AI functions qualify for incremental refresh
 --      ONLY in the SELECT clause, never in WHERE. So we read from SURVEY_BASE
---      (not SURVEY_CLEAN — its AI_FILTER-in-WHERE would force FULL refresh),
+--      (not SURVEY_CLEAN - its AI_FILTER-in-WHERE would force FULL refresh),
 --      use a cheap deterministic pre-filter, and make AI_FILTER an is_substantive
 --      COLUMN. REFRESH_MODE = INCREMENTAL makes creation fail if anything isn't
 --      incremental-safe. Confirm with: SHOW DYNAMIC TABLES LIKE 'SURVEY_ENRICHED';
@@ -315,7 +315,7 @@ GROUP BY game_round_performance;
 
 
 -- ============================================================================
--- STAGE 3 — ADVANCED AI (STRETCH): Cortex Search  (03_advanced_ai_search...)
+-- STAGE 3 - ADVANCED AI (STRETCH): Cortex Search  (03_advanced_ai_search...)
 -- ============================================================================
 
 -- 3.1  A managed, auto-embedded search service over the free text
@@ -329,7 +329,7 @@ AS
   FROM SURVEY_ENRICHED
   WHERE clarity_comment IS NOT NULL;
 
--- 3.2  "Find feedback like this", filtered — retrieval, not aggregation
+-- 3.2  "Find feedback like this", filtered - retrieval, not aggregation
 SELECT PARSE_JSON(
   SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
     'SURVEY_FEEDBACK_SEARCH',
@@ -344,7 +344,7 @@ SELECT PARSE_JSON(
 
 
 -- ============================================================================
--- STAGE 4 — CONSUMPTION & EVALUATION  (04_consumption_eval...)
+-- STAGE 4 - CONSUMPTION & EVALUATION  (04_consumption_eval...)
 -- ============================================================================
 
 -- 4.1  The structured half of the core question, via the semantic view
@@ -355,7 +355,7 @@ SELECT * FROM SEMANTIC_VIEW(
 )
 ORDER BY game_round_performance;
 
--- 4.2  The "why" half — a live, grounded summary for the poor group
+-- 4.2  The "why" half - a live, grounded summary for the poor group
 --      (uses game_round_performance carried on the enriched table; see notebook)
 SELECT
   AI_AGG(clarity_comment,
